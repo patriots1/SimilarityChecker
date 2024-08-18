@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-print('hello world')
-=======
 import helper
 
 
