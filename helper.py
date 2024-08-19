@@ -45,7 +45,7 @@ def check_similarity(first_text: list, second_text: list, x: int) -> list:
     for word in most_common_first:
         if word in most_common_second:
             common_ratio[word] = [most_common_first[word], most_common_second[word], int('{:.2f}'.format(most_common_first[word]/most_common_second[word]))]
-    common_ratio = sorted(common_ratio, lambda x: x[1][2], True)
+    common_ratio = sorted(common_ratio.items(), lambda x: x[1][2], True)
     return common_ratio[:x]
     
     
