@@ -7,3 +7,12 @@ def initialize_txt(filename, per_line = True):
         else:
             return r.read()
         
+
+def clean_txt(text: str) -> str:
+    for i,char in enumerate(text):
+        if not text[i].isalpha() and text[i] != ' ':
+            text = text[0:i] + text[i+1:]
+    return text
+
+def remove_support_words(text: str):
+    words = text.split(' ')
