@@ -14,5 +14,12 @@ def clean_txt(text: str) -> str:
             text = text[0:i] + text[i+1:]
     return text
 
-def remove_support_words(text: str):
+def remove_support_words(text: str) -> list:
     words = text.split(' ')
+    for word in words:
+        if word in stop_words:
+            words.remove(word)
+    return words
+    
+def example():
+    return 0
