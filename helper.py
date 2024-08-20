@@ -2,7 +2,7 @@ stop_words = ['i','me','my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 
 
 
 #extracts text from .txt file
-def initialize_txt(filename, per_line = False):
+def initialize_txt(filename, per_line = True):
     with open(filename) as r:
         if per_line:
             return r.read().splitlines()
@@ -10,23 +10,58 @@ def initialize_txt(filename, per_line = False):
             return r.read()
         
 #cleans text from all non alpha characters
-def clean_txt(text: str) -> str:
-    for i,char in enumerate(text):
-        if text[i-1:i+1] == '\\n':
-            text = text[:i-1] + text[i+2:]
-        elif not text[i].isalpha() and text[i] != ' ':
-            text = text[0:i] + text[i+1:]
-    return text
+def clean_txt(text: list) -> list:
+    ier = 0
+    output = []
+    for line in text:
+        output_ls = []
+        word_ls = list(line.split(' '))
+        for word in word_ls:
+            word_str = ''
+            for char in word:
+                if char.isalpha():
+                    word_str += char
+                elif char == '.' or char == ',':
+                    print('activated')
+                    output_ls.append(word_str)
+                    word_str = ''
+            output_ls.append(word_str)
+        # for word in output_ls:
+        #     output.append(word)
+        output.append(output_ls)
+    return output
+    
+
+# non-split
+# def clean_txt(text: str) -> str:
+#     for i,char in enumerate(text):
+#         if text[i:i+2] == '\\n':
+#             print('removing new line')
+#             text = text[:i] + text[i+2:]
+#         if not text[i].isalpha() and text[i] != ' ':
+#             text = text[:i] + text[i+1:]
+#     return text
 
 #removes all the stop words
-def remove_support_words(text: str) -> list:
-    print(type(text))
-    words = list(text.split(" "))
-    for word in words:
-        if word in stop_words:
-            words.remove(word)
-            print(word)
-    return words
+def remove_support_words(text: list) -> list:
+    output = []
+    for line in text:
+        output_ls = []
+        for word in line:
+            if word not in stop_words:
+                output_ls.append(word)
+        output.append(output_ls)
+    return output
+
+# str -> ls
+# def remove_support_words(text: str) -> list:
+#     print(type(text))
+#     words = list(text.split(" "))
+#     for word in words:
+#         if word in stop_words:
+#             words.remove(word)
+#             print(word)
+#     return words
     
 #returns top x words that are the most common between texts (first_text/second_text)
 def check_similarity(first_text: list, second_text: list, x: int) -> list:
@@ -34,17 +69,21 @@ def check_similarity(first_text: list, second_text: list, x: int) -> list:
     common_ratio = {}
     most_common_first = {}
     most_common_second = {}
+    dummy = {}
     #find occurences of texts
-    for word in first_text:
-        if word in most_common_first:
-            most_common_first[word] += 1
-        else:
-            most_common_first[word] = 1
-    for word in second_text:
-        if word in most_common_second:
-            most_common_second[word] += 1
-        else:
-            most_common_second[word] = 1
+    for line in first_text:
+        for word in line:
+            if word in most_common_first:
+                most_common_first[word] += 1
+            else:
+                most_common_first[word] = 1
+    for line in second_text:
+        for word in line:
+            if word in most_common_second:
+                most_common_second[word] += 1
+            else:
+                most_common_second[word] = 1
+        
     #find the top 10 words most common between texts
     for word in most_common_first:
         if word in most_common_second:
