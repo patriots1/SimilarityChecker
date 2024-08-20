@@ -2,7 +2,7 @@ stop_words = ['i','me','my', 'myself', 'we', 'our', 'ours', 'ourselves', 'you', 
 
 
 #extracts text from .txt file
-def initialize_txt(filename, per_line = True):
+def initialize_txt(filename, per_line = False):
     with open(filename) as r:
         if per_line:
             return r.read().splitlines()
@@ -12,16 +12,20 @@ def initialize_txt(filename, per_line = True):
 #cleans text from all non alpha characters
 def clean_txt(text: str) -> str:
     for i,char in enumerate(text):
-        if not text[i].isalpha() and text[i] != ' ':
+        if text[i-1:i+1] == '\\n':
+            text = text[:i-1] + text[i+2:]
+        elif not text[i].isalpha() and text[i] != ' ':
             text = text[0:i] + text[i+1:]
     return text
 
 #removes all the stop words
 def remove_support_words(text: str) -> list:
-    words = text.split(' ')
+    print(type(text))
+    words = list(text.split(" "))
     for word in words:
         if word in stop_words:
             words.remove(word)
+            print(word)
     return words
     
 #returns top x words that are the most common between texts (first_text/second_text)
@@ -44,8 +48,8 @@ def check_similarity(first_text: list, second_text: list, x: int) -> list:
     #find the top 10 words most common between texts
     for word in most_common_first:
         if word in most_common_second:
-            common_ratio[word] = [most_common_first[word], most_common_second[word], int('{:.2f}'.format(most_common_first[word]/most_common_second[word]))]
-    common_ratio = sorted(common_ratio.items(), lambda x: x[1][2], True)
-    return common_ratio[:x]
+            common_ratio[word] = [most_common_first[word], most_common_second[word], float('{:.2f}'.format(most_common_first[word]/most_common_second[word]))]
+    common_ratio = sorted(common_ratio.items(), key = lambda x: x[1][2])
+    return common_ratio[len(common_ratio) - x:]
     
     
