@@ -11,7 +11,6 @@ def initialize_txt(filename, per_line = True):
         
 #cleans text from all non alpha characters
 def clean_txt(text: list) -> list:
-    ier = 0
     output = []
     for line in text:
         output_ls = []
@@ -22,12 +21,9 @@ def clean_txt(text: list) -> list:
                 if char.isalpha():
                     word_str += char
                 elif char == '.' or char == ',':
-                    print('activated')
                     output_ls.append(word_str)
                     word_str = ''
             output_ls.append(word_str)
-        # for word in output_ls:
-        #     output.append(word)
         output.append(output_ls)
     return output
     
